@@ -49,15 +49,15 @@ The Model class is the core of this notebook and serves as the interface for gen
 
 Upon instantiation, the class performs several setup tasks essential for the prediction process:
 
-1.Model Loading
+**1.Model Loading**
 
 The Gemma 2 9B IT model is downloaded via kagglehub and loaded using Hugging Face’s transformers library. The AutoTokenizer is used to tokenize the input prompt (i.e., convert it into model-understandable tokens), while AutoModelForCausalLM is used to load the actual language model trained for causal (left-to-right) text generation.
 
-2.Quantization with BitsAndBytes
+**2.Quantization with BitsAndBytes**
 
 The model is loaded with 4-bit quantization using BitsAndBytesConfig. This drastically reduces memory consumption without severely impacting output quality. Options like bnb_4bit_quant_type="nf4" and using float16 precision are set for computational efficiency. This allows the large model to run on typical Kaggle GPUs or local machines with limited resources.
 
-3.Prompt Template Definition
+**3.Prompt Template Definition**
 
 A structured prompt template is stored as a string in self.prompt_template. This template contains:
 
@@ -67,7 +67,7 @@ A section defining allowed SVG elements and attributes.
 
 An example prompt and SVG output to guide the model through few-shot learning.
 
-4.SVG Constraints and Defaults
+**4.SVG Constraints and Defaults**
 
 The svg_constraints package is imported from Kaggle Hub to validate output. A fallback default SVG is stored in self.default_svg (a simple circle) to be returned in case of errors or timeouts. The timeout for predictions is also set (self.timeout_seconds = 90), ensuring the process does not hang indefinitely.
 
@@ -75,11 +75,11 @@ The svg_constraints package is imported from Kaggle Hub to validate output. A fa
 
 The predict function is the core method that accepts a natural language prompt and returns an SVG image in string format.
 
-1.Prompt Construction
+**1.Prompt Construction**
 
 The input description is formatted into the previously defined prompt_template, producing a full prompt that includes task instructions, constraints, examples, and the user query.
 
-2.Tokenization and inference
+**2.Tokenization and inference**
 
 The formatted prompt is tokenized using the tokenizer, then passed to the model for generation using model.generate(...). The generation is done with:
 
@@ -87,31 +87,31 @@ do_sample=True for creative, non-deterministic output.
 
 max_new_tokens to limit the output length.
 
-3.SVG Extraction via Regex
+**3.SVG Extraction via Regex**
 
 After decoding the generated tokens, the code searches the output for a full <svg>...</svg> block using regular expressions. If found, that segment is retained. If not, the method falls back to returning the default SVG.
 
-4.SVG Constraint Enforcement
+**4.SVG Constraint Enforcement**
 
 The extracted SVG code is passed to enforce_constraints(...) to ensure only allowed elements and attributes are retained. This step is crucial to meet Kaggle’s validation and scoring rules.
 
-5.Validate via rendering
+**5.Validate via rendering**
 
 The cairosvg library attempts to render the SVG to PNG in memory. If rendering fails, the output is assumed invalid, and the fallback SVG is returned.
 
-6.Timeout Handling
+**6.Timeout Handling**
 
 The entire SVG generation logic is executed inside a thread pool using concurrent.futures.ThreadPoolExecutor. This ensures that if the model takes too long to respond (e.g., due to excessive token generation or an internal error), the system will timeout after 90 seconds and return a valid fallback SVG.
 
-**Constraint Enforcement
+**Constraint Enforcement**
 
 This function cleans and validates the generated SVG to ensure it complies with Kaggle’s strict evaluation rules.
 
-1.XML Parsing
+**1.XML Parsing**
 
 XML parsing with lxml.etree converts the raw SVG string into a structured format. If the SVG is malformed and cannot be parsed, the code falls back to a default safe SVG. This ensures your model is robust, predictable, and compliant with expected standards.
 
-2.Disallowed Elements $ Attributes
+**2.Disallowed Elements $ Attributes**
 
 The parsed tree is traversed to check whether each element and its attributes are allowed based on the imported svg_constraints rules:
 
@@ -119,11 +119,11 @@ Any element not on the allowed list is removed.
 
 Attributes not explicitly allowed for a given element (or not globally allowed) are also stripped.
 
-3.Path attribute validation
+**3.Path attribute validation**
 
 For <path> elements, the d attribute (which defines vector shapes) is validated using a strict regex powered by re2. Paths with malformed or missing d values are removed to prevent rendering errors.
 
-4.Safe output generation
+**4.Safe output generation**
 
 Once cleaned, the SVG tree is converted back into a string. If this fails for any reason (e.g., encoding issues), the fallback SVG is returned.
 
