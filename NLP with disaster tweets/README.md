@@ -39,7 +39,7 @@ The .describe() method was then used to generate summary statistics for tweet le
 
 The preprocessing pipeline prepares raw tweet text for input into a DistilBERT-based classifier. Each step serves a specific purpose to ensure compatibility with the model and optimal training performance:
 
-## 🔄 Preprocessing Stages
+**Preprocessing Stages**
 
 | Step | Description | Reasoning |
 |------|-------------|-----------|
