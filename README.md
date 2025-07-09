@@ -1,6 +1,6 @@
 This repository serves as a central hub for all NLP-related projects - both completed and upcoming. 
 
-Below descriptions provide a basic overview of each individual project.Detailed descriptions can be found on each README file
+Below descriptions provide a basic overview of each individual project. Detailed descriptions can be found on each README file.
 
 # NLP with disaster tweets
 
