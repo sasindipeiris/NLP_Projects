@@ -39,7 +39,7 @@ The .describe() method was then used to generate summary statistics for tweet le
 
 The preprocessing pipeline prepares raw tweet text for input into a DistilBERT-based classifier. Each step serves a specific purpose to ensure compatibility with the model and optimal training performance:
 
-**Preprocessing Stages**
+
 
 | Step | Description | Reasoning |
 |------|-------------|-----------|
@@ -81,6 +81,7 @@ The use of pretrained DistilBERT significantly boosts language understanding whi
 # Model Evaluation
 
 **Confusion Matrix**
+
 The confusion matrix visualizes the model's classification results by comparing true labels (y_true) with predicted labels (y_pred).
 
 It breaks down the predictions into four categories:
